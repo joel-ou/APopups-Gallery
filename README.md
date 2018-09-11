@@ -1,3 +1,5 @@
+# *It is still under test. Do not use it in production environment
+
 ## APopups-Gallery
 Current version: 1.0.0 beta
 
