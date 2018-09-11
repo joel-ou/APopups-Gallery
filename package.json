@@ -1,0 +1,22 @@
+{
+  "name": "apopups-gallery",
+  "main": "Gallery.vue",
+  "keywords": [
+    "gallery",
+    "popup",
+    "apopups",
+    "photo",
+    "album",
+    "picture"
+  ],
+  "version": "1.0.0",
+  "description": "",
+  "private": false,
+  "scripts": {},
+  "author": "joel.ou",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {
+    "hammerjs": "^2.0.8"
+  }
+}
