@@ -1,4 +1,4 @@
-efore starting
+<b>Before starting</b>
 Before using, you need to know about vuejs and vue's single-file component development
 Getting started
 Step1: install by npm
