@@ -6,7 +6,7 @@ Current version: 1.0.0 beta
 Before using, you need to know about vuejs and vue's single-file component development
 
 <h2>Getting started</h2>
-Step1: install by npm
+<h3>Step1: install by npm</h3>
 `npm install popups-gallery-vue`
 
 <h3>Step2: import gallery vue component</h3>
