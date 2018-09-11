@@ -1,14 +1,19 @@
-<b>Before starting</b>
-Before using, you need to know about vuejs and vue's single-file component development
-Getting started
-Step1: install by npm
-`npm install apopups-gallery`
+APopups-Gallery
+Current version: 1.0.0 beta
 
-Step2: import gallery vue component
+
+<h2>Before starting</h2>
+Before using, you need to know about vuejs and vue's single-file component development
+
+<h2>Getting started</h2>
+Step1: install by npm
+`npm install popups-gallery-vue`
+
+<h3>Step2: import gallery vue component</h3>
 `import gallery from "popups-gallery";`
 
-Step3: Add to vuejs components
+<h3>Step3: Add to vuejs components</h3>
 `components: { gallery }`
 
-Step4: useing gallery component on your vue page
+<h3>Step4: useing gallery component on your vue page</h3>
 `<gallery :imageDatas="imageDatas" :index="0" :show="isShow" @onClose="isShow=false"></gallery>`
