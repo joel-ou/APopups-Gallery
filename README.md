@@ -10,7 +10,7 @@ Before using, you need to know about vuejs and vue's single-file component devel
 `npm install apopups-gallery`
 
 ### Step2: import gallery vue component
-`import gallery from "popups-gallery";`
+`import gallery from "apopups-gallery";`
 
 ### Step3: Add to vuejs components
 `components: { gallery }`
