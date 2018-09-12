@@ -1,6 +1,6 @@
 # *It is still under test. Do not use it in production environment
 
-the new version was updated on the npm
+the new version (1.0.1beta) was updated on the npm
 
 Demo: https://joel-ou.github.io/APopupsGalleryDemo/
 
