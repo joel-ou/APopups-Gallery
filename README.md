@@ -1,5 +1,7 @@
 # *It is still under test. Do not use it in production environment
 
+the new version was updated on the npm
+
 Demo: https://joel-ou.github.io/APopupsGalleryDemo/
 
 ## APopups-Gallery
