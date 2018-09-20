@@ -1,4 +1,5 @@
 # *It is still under test. Do not use it in production environment
+*Try not to use it on PC
 
 the new version (1.0.2 beta) was updated on the npm
 
