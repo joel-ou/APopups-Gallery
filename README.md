@@ -1,5 +1,4 @@
-https://github.com/joel-ou/APopups-Gallery
-
+Demo: https://joel-ou.github.io/APopupsGalleryDemo/
 
 # *It is still under test. Do not use it in production environment
 
