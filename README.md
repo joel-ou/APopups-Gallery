@@ -4,7 +4,7 @@ https://github.com/joel-ou/APopups-Gallery
 # *It is still under test. Do not use it in production environment
 
 ## APopups-Gallery
-Current version: 1.0.0 beta
+Current version: 1.0.3 beta
 
 ## Before starting
 Before using, you need to know about vuejs and vue's single-file component development
