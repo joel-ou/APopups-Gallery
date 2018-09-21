@@ -1,6 +1,7 @@
 Demo: https://joel-ou.github.io/APopupsGalleryDemo/
 
 # *It is still under test. Do not use it in production environment
+*&&&*** Try not to use it on PC, It's for mobile
 
 ## APopups-Gallery
 Current version: 1.0.3 beta
