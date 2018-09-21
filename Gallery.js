@@ -1,3 +1,12 @@
+/**
+ * APopups-Gallery 1.1.0 beta
+ * Author: joel.ou
+ * Mail: 8019893@qq.com
+ * Date: 2018年9月01日
+ * License: MIT
+ * Github: https://github.com/joel-ou/APopups-Gallery
+ * Demo: https://joel-ou.github.io/APopupsGalleryDemo/
+ */
 import Hammer from "hammerjs";
 
 /**
@@ -39,11 +48,18 @@ export default class Gallery {
          * 配置参数
          */
         this.options = {};
+        /**
+         * images load states
+         */
+        this.imageLoadState = [];
+
         Object.assign(this.options, DEFAULT_OPTIONS, options);
         /**
          * 实例化手势计算器
          */
         this.calculator = new GestureCalculator(this.touchArea, this.options);
+
+        this.singleTapWaitingId;
 
         this.init();
     }
@@ -56,7 +72,8 @@ export default class Gallery {
         this.manager.add(new Hammer.Pan({threshold: 0, pointers: 0}));
         this.manager.add(new Hammer.Pinch({ threshold: 0.05 })).recognizeWith(this.manager.get('pan'));
         this.manager.add(new Hammer.Swipe()).recognizeWith(this.manager.get('pan'));
-        this.manager.add( new Hammer.Tap({ event: 'doubletap', taps: 2 }) );
+        this.manager.add(new Hammer.Tap({event:'doubletap', taps: 2}));
+        this.manager.add(new Hammer.Tap({event:'tap'}));
     }
 
     /**
@@ -80,6 +97,11 @@ export default class Gallery {
     setImagesNumber(number){
         this.calculator.imagesNumber = number;
         this.calculator.initValues();
+        this.imageLoadState = new Array(number);
+    }
+
+    setImageLoaded(index){
+        this.imageLoadState[index] = true;
     }
 
     trigger(eventName, e){
@@ -102,6 +124,22 @@ export default class Gallery {
     resetGallery(){
         this.calculator.initValues();
         this.calculator.curImgIndex = 0;
+        this.imageLoadState = [];
+    }
+
+    imageIsLoaded(){
+        // const el = this.touchArea.childNodes[this.calculator.curImgIndex];
+        // const x = Number.parseInt(el.naturalWidth);
+        // const y = Number.parseInt(el.naturalHeight);
+        // return x>0&&y>0;
+        // const size = this.calculator.getImgSize()
+        // return size.x>0&&size.y>0;
+        return this.imageLoadState[this.calculator.curImgIndex];
+    }
+
+    doClose(){
+        this.events.callbacks['close']({close:true});
+        this.resetGallery();
     }
 }
 
@@ -118,6 +156,9 @@ fn.events = {
      */
     slide(){
         this.manager.on('panstart panmove', e=> {
+            if(!this.imageIsLoaded()){
+                return;
+            }
             this.trigger('slide', e);
         });
     },
@@ -127,6 +168,9 @@ fn.events = {
      */
     pinch(){
         this.manager.on('pinchstart pinchmove', e=> {
+            if(!this.imageIsLoaded()){
+                return;
+            }
             this.trigger('pinch', e);
         });
     },
@@ -137,14 +181,28 @@ fn.events = {
     },
     doubletap(){
         this.manager.on('doubletap', e=>{
+            if(!this.imageIsLoaded()){
+                return;
+            }
             this.trigger('doubletap', e);
+        });
+    },
+    tap(){
+        this.manager.on('tap', e=>{
+            this.trigger('tap', e);
         });
     },
     actionend(){
         this.manager.on('pinchcancel pinchend', e=>{
+            if(!this.imageIsLoaded()){
+                return;
+            }
             this.trigger('actionend', e);
         });
         this.manager.on('pancancel panend', e=>{
+            if(!this.imageIsLoaded()){
+                return;
+            }
             if(!this.trigger('close', e)){
                 return;
             }
@@ -168,7 +226,10 @@ Object.assign(fn.events.functions, {
     slide(callback, e){
         if(this.isLock){return;}
         const isStart = e.type==='panstart';
-        this.calculator.slide(e.deltaX, e.deltaY, isStart);
+        if(isStart && this.calculator.get('scale') === 1){
+            this.slideDirection = Math.abs(e.deltaX)>Math.abs(e.deltaY)?'x':'y';
+        }
+        this.calculator.slide((this.slideDirection||'x')==='x'?e.deltaX:0, (this.slideDirection||'y')==='y'?e.deltaY:0, isStart);
         callback({slide:this.calculator.get('slide'), bound: this.calculator.checkBound(null, null, true)});
     },
     /**
@@ -177,11 +238,12 @@ Object.assign(fn.events.functions, {
      * @param {Object} e 
      */
     pinch(callback, e){
+        this.slideDirection = '';
         const isStart = e.type==='pinchstart';
         if(isStart){this.calculator.position(e.center);}
         this.calculator.zoom(Number.parseFloat(e.scale), isStart);
         callback({lastActionData: this.calculator.getLastActionData('scale'), scale: this.calculator.get('scale'), 
-            slide: this.calculator.get('slide')});
+            slide: this.calculator.get('slide'), maxScale: this.calculator.scaleActMaxVal});
     },
     /**
      * 快速滑动的事件方法
@@ -199,7 +261,11 @@ Object.assign(fn.events.functions, {
                 direction = 'previous';
             }
             let switchObj = this.calculator.switch(direction||false, direction);
+            switchObj.isImageLoaded = this.imageIsLoaded();
             callback({switchObj}, e);
+            return;
+        }
+        if(!this.imageIsLoaded()){
             return;
         }
         let deltaTime = e.deltaTime;
@@ -207,8 +273,8 @@ Object.assign(fn.events.functions, {
         if(deltaTime > 200 || scale <= 1){
             return;
         }
-        this.calculator.swipe(e.deltaX, e.deltaY, deltaTime);
-        callback({slide: this.calculator.get('slide')}, e);
+        let isOverBound = this.calculator.swipe(e.deltaX, e.deltaY, deltaTime);
+        callback({slide: this.calculator.get('slide'), isOverBound}, e);
     },
     /**
      * 双击的事件方法
@@ -216,6 +282,11 @@ Object.assign(fn.events.functions, {
      * @param {Object} e 
      */
     doubletap(callback, e){
+        this.slideDirection = '';
+        if(this.singleTapWaitingId){
+            clearTimeout(this.singleTapWaitingId);
+            this.singleTapWaitingId = null;
+        }
         const scale = this.calculator.get('scale');
         if(scale < 3){
             this.calculator.position(e.center);
@@ -225,6 +296,13 @@ Object.assign(fn.events.functions, {
             this.calculator.initValues();
         }
         callback({scale: this.calculator.get('scale'), slide: this.calculator.get('slide')});
+    },
+    tap(callback, e){
+        this.singleTapWaitingId = setTimeout(() => {
+            if(!this.singleTapWaitingId){return;}
+            this.singleTapWaitingId = null;
+            callback({});
+        }, 200);
     },
     /**
      * 持续动作结束的事件方法，适用于滑动，捏动作的结束事件。
@@ -239,11 +317,11 @@ Object.assign(fn.events.functions, {
         setTimeout(() => {
             this.isLock = false;
         }, 200);
-        if(this.calculator.getLastActionData('scale') <= 1 && this.calculator.get('scale') < 1){
-            this.events.callbacks['close']({close:true});
-            this.resetGallery();
+        if(this.calculator.getLastActionData('scale') <= 1 && this.calculator.get('scale') < 1 && this.calculator.scaleActMaxVal <= 1){
+            this.doClose();
             return;
         }
+        this.calculator.scaleActMaxVal = 0;
         const before = this.calculator.get('slide').slice();
         const result = this.calculator.correct();
         let switchObj = {switch: false};
@@ -272,8 +350,7 @@ Object.assign(fn.events.functions, {
         const closeThreshold = this.options.closeThreshold;
         if(this.calculator.get('scale') >=1 && bound.isOver && Math.abs(bound.number) >= (touchAreaSize*closeThreshold) && slideY > 0 && 
             e.deltaY <= Math.abs(bound.number)){
-            callback({close: true});
-            this.resetGallery();
+            this.doClose();
             return false;
         }
         return true;
@@ -516,6 +593,10 @@ class GestureCalculator extends Calculator {
         this.pinchStartVal = 0;
         //用于锁定切换
         this.switchLocked = false;
+
+        this.compensation = 0;
+
+        this.scaleActMaxVal = 0;
     }
 
     /**
@@ -574,9 +655,11 @@ class GestureCalculator extends Calculator {
     zoom(scale, isStart){
         const old = this.get('scale');
         let maxScale = this.options.maxScale;
-        if((scale < 1 && old < 0.5) || (scale > 1 && old > maxScale+1)){
-            return;
-        }
+        // scale -= this.compensation;
+        // if((scale < 1 && old < 0.5) || (scale > 1 && old > maxScale+1)){
+        //     this.compensation = old-maxScale;
+        //     return;
+        // }
         let distance = (scale-1);
         if(isStart){
             this.setLastActionData('scale', old);
@@ -584,6 +667,7 @@ class GestureCalculator extends Calculator {
         }else{
             distance = distance-this.pinchStartVal;
         }
+        if(scale > this.scaleActMaxVal){this.scaleActMaxVal=scale;}
         this.pinchStartVal = (scale-1);
         this.addScale(scale>=1?distance:(this.baseScale*scale)-old);
         this.move();
@@ -634,18 +718,22 @@ class GestureCalculator extends Calculator {
         let slide = this.get('slide').slice();
         const rate = 1+(1-(deltaTime/200));
         let newSlide = {x: x*rate, y: y*rate};
-        this.eachAxis((axis)=>{
+        let isOverBound = this.eachAxis((axis)=>{
             let bound = this.getBound(axis);
             bound = bound<=0?0:bound;
             if(Math.abs(slide[axis]) < bound){
                 if(Math.abs(slide[axis])+Math.abs(newSlide[axis]) > bound){
                     let cal = bound-Math.abs(slide[axis])+30;
                     newSlide[axis] = newSlide[axis]<0?0-cal:cal;
+                    return true;
                 }
+                return false;
             } else {
                 newSlide[axis] = 0;
+                return false;
             }
         });
         this.addSlide(newSlide.x, newSlide.y);
+        return isOverBound.x||isOverBound.y;
     }
 }
