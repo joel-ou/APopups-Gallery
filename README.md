@@ -4,7 +4,7 @@ Demo: https://joel-ou.github.io/APopupsGalleryDemo/
 *&&&*** Try not to use it on PC, It's for mobile
 
 ## APopups-Gallery
-Current version: 1.0.4 beta
+Current version: 1.0.5 beta
 
 ## Before starting
 Before using, you need to know about vuejs and vue's single-file component development
