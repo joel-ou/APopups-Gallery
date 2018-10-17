@@ -81,7 +81,7 @@
     </div>
 </template>
 <script>
-import gallery from "apopups-gallery";
+import gallery from "@/components/apopups-gallery";
 import top from "@/components/Top.vue";
 import bottom from "@/components/Bottom.vue";
 
