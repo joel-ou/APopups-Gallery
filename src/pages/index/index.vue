@@ -102,16 +102,6 @@ export default {
     data () {
         return {
             imageData: [[
-                require(`@/imgs/animal-3.jpg`),
-                require(`@/imgs/long.jpg`),
-                require(`@/imgs/animal-1.jpg`),
-                require(`@/imgs/animal-2.jpg`),
-                require(`@/imgs/person-2.jpg`),
-                require(`@/imgs/person-1.jpg`),
-                require(`@/imgs/1.jpg`),
-                require(`@/imgs/2.jpg`),
-                require(`@/imgs/3.jpg`),
-                require(`@/imgs/4.jpg`)
             ],[
             ]],
             galleryDatas: [],
