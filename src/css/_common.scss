@@ -1,0 +1,46 @@
+@import 'constant.scss';
+
+html, body {
+    font-size: $base-font-size;
+    margin: 0 0;
+    height: 100%;
+    width: 100%;
+    line-height: 1.6rem;
+    text-size-adjust: 100%;
+    background-color: #eaeaea;
+}
+ul, ol{
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+ul, ol, p {
+    padding: 0;
+    margin: 0;
+}
+a:visited, a{
+    color: rgb(0, 159, 255);
+}
+a {
+    text-decoration: none;
+}
+
+//消除ios默认样式
+input[type=button], input[type=submit], input[type=text], input[type=password]{
+    -webkit-appearance:none;
+    outline:none;
+}
+
+@media screen and (orientation: landscape){
+    html, body {
+        padding-top: constant(safe-area-inset-top);
+        padding-top: env(safe-area-inset-top);
+        padding-left: constant(safe-area-inset-left);
+        padding-left: env(safe-area-inset-left);
+        padding-right: constant(safe-area-inset-right);
+        padding-right: env(safe-area-inset-right);
+    }
+}

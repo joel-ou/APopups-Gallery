@@ -1,0 +1,40 @@
+{
+  "name": "pop-gallery-demo",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "start": "webpack-dev-server -w --open --env.dontClean=true --config ./webpack.config.dev.js",
+    "build-dev": "webpack -w --config ./configs/webpack.config.dev.js",
+    "build": "webpack --env.product=true --config ./configs/webpack.config.product.js"
+  },
+  "author": "joel",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.2",
+    "css-loader": "^1.0.0",
+    "file-loader": "^2.0.0",
+    "glob": "^7.1.2",
+    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-template": "^6.2.0",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "url-loader": "^1.1.1",
+    "vue-loader": "^15.4.2",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.9",
+    "webpack-merge": "^4.1.4"
+  },
+  "dependencies": {
+    "apopups-gallery": "^1.1.1",
+    "vue": "^2.5.16"
+  }
+}
