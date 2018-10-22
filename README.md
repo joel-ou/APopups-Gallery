@@ -19,3 +19,7 @@ Before using, you need to know about vuejs and vue's single-file component devel
 
 ### Step4: useing gallery component on your vue page
 `<gallery :imageDatas="imageDatas" :index="0" :show="isShow" @onClose="isShow=false"></gallery>`
+
+
+###More info:
+see here https://joel-ou.github.io/APopupsGalleryDemo/
