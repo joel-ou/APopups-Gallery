@@ -21,5 +21,5 @@ Before using, you need to know about vuejs and vue's single-file component devel
 `<gallery :imageDatas="imageDatas" :index="0" :show="isShow" @onClose="isShow=false"></gallery>`
 
 
-###More info:
+### More info:
 see here https://joel-ou.github.io/APopupsGalleryDemo/
