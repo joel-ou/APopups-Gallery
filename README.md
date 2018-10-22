@@ -9,7 +9,7 @@ Before using, you need to know about vuejs and vue's single-file component devel
 ## Getting started
 
 ### Step1: install by npm
-`npm install apopups-gallery`
+`npm install apopups-gallery -S`
 
 ### Step2: import gallery vue component
 `import gallery from "apopups-gallery";`
